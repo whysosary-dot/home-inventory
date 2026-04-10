@@ -2,8 +2,17 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>우리집 생필품 재고 관리</title>
+<!-- PWA & 홈 화면 아이콘 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="생필품 재고">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icon-120.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a90d9">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -186,6 +195,68 @@
     color: #aaa;
     margin-top: 20px;
     padding-bottom: 20px;
+  }
+
+  /* iPhone SE / 소형 기기 */
+  @media (max-width: 375px) {
+    header { padding: 20px 16px; }
+    header h1 { font-size: 1.3rem; }
+    .container { padding: 14px; }
+    .summary { gap: 8px; }
+    .summary-card { padding: 12px 8px; }
+    .summary-card .number { font-size: 1.5rem; }
+    .category-header { padding: 12px 14px; font-size: 0.9rem; }
+    .item { padding: 12px 14px; }
+    .item-name { font-size: 0.88rem; }
+    .tips { padding: 14px; }
+    .tips li { font-size: 0.8rem; }
+  }
+
+  /* iPhone 표준 */
+  @media (min-width: 376px) and (max-width: 430px) {
+    .container { padding: 16px; }
+  }
+
+  /* iPad */
+  @media (min-width: 768px) {
+    header { padding: 36px 20px; }
+    header h1 { font-size: 1.9rem; }
+    .container { max-width: 680px; padding: 28px; }
+    .summary-card { padding: 22px; }
+    .summary-card .number { font-size: 2.2rem; }
+    .summary-card .label { font-size: 0.88rem; }
+    .category-header { padding: 16px 22px; font-size: 1.1rem; }
+    .item { padding: 16px 22px; }
+    .item-name { font-size: 1.05rem; }
+    .qty-badge { min-width: 42px; height: 34px; font-size: 1.05rem; }
+    .tips { padding: 22px; }
+    .tips h3 { font-size: 1.05rem; }
+    .tips li { font-size: 0.92rem; }
+  }
+
+  /* iPad Pro / 큰 화면 */
+  @media (min-width: 1024px) {
+    .container { max-width: 720px; }
+    header h1 { font-size: 2rem; }
+  }
+
+  /* Safe area (노치 대응) */
+  header { padding-top: max(28px, env(safe-area-inset-top)); }
+  .container { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+
+  /* 다크 모드 지원 */
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a2e; color: #e0e0e0; }
+    .category { background: #252540; }
+    .category-header { background: #2a2a48; border-bottom-color: #333; }
+    .item { border-bottom-color: #333; }
+    .item:hover { background: #2e2e4a; }
+    .summary-card { background: #252540; }
+    .summary-card .label { color: #aaa; }
+    .tips { background: linear-gradient(135deg, #2a2518, #332d1a); }
+    .tips h3 { color: #d4a840; }
+    .tips li { color: #c0a050; }
+    header { background: linear-gradient(135deg, #2d5a9e, #1e4080); }
   }
 </style>
 </head>

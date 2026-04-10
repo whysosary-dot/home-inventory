@@ -1,0 +1,13 @@
+{
+  "name": "우리집 생필품 재고 관리",
+  "short_name": "생필품 재고",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#4a90d9",
+  "icons": [
+    { "src": "icon-120.png", "sizes": "120x120", "type": "image/png" },
+    { "src": "icon-152.png", "sizes": "152x152", "type": "image/png" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
