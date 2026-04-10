@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리집 생필품 재고 관리</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #4a90d9, #357abd);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  header h1 { font-size: 1.6rem; font-weight: 700; }
+  header p { font-size: 0.85rem; opacity: 0.85; margin-top: 6px; }
+  .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+
+  /* 카테고리 섹션 */
+  .category {
+    background: white;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .category-header {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 1rem;
+    background: #f8f9fb;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .category-header .icon { font-size: 1.2rem; }
+
+  /* 아이템 */
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: #fafbfc; }
+
+  .item-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .item-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .qty-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  /* 수량별 색상 */
+  .qty-normal {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .qty-low {
+    background: #fff3e0;
+    color: #e65100;
+    animation: pulse-orange 2s infinite;
+  }
+  .qty-out {
+    background: #ffebee;
+    color: #c62828;
+    animation: pulse-red 2s infinite;
+  }
+
+  @keyframes pulse-orange {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(230,81,0,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(230,81,0,0); }
+  }
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(198,40,40,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(198,40,40,0); }
+  }
+
+  /* 상태 라벨 */
+  .status-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .status-low {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  .status-out {
+    background: #ffebee;
+    color: #c62828;
+  }
+
+  /* 요약 카드 */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .summary-card .number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .summary-card .label {
+    font-size: 0.78rem;
+    color: #888;
+  }
+  .summary-card.total .number { color: #4a90d9; }
+  .summary-card.low .number { color: #e65100; }
+  .summary-card.out .number { color: #c62828; }
+
+  /* 조언 섹션 */
+  .tips {
+    background: linear-gradient(135deg, #fff9e6, #fff3cc);
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .tips h3 {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    color: #b8860b;
+  }
+  .tips ul {
+    list-style: none;
+    padding: 0;
+  }
+  .tips li {
+    font-size: 0.85rem;
+    padding: 5px 0;
+    padding-left: 20px;
+    position: relative;
+    color: #665500;
+    line-height: 1.5;
+  }
+  .tips li::before {
+    content: ">";
+    position: absolute;
+    left: 4px;
+    color: #b8860b;
+    font-weight: bold;
+  }
+
+  .updated {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #aaa;
+    margin-top: 20px;
+    padding-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>우리집 생필품 재고 관리</h1>
+  <p>한눈에 보는 집안 물품 현황</p>
+</header>
+
+<div class="container">
+
+  <!-- 요약 -->
+  <div class="summary">
+    <div class="summary-card total">
+      <div class="number">1</div>
+      <div class="label">전체 품목</div>
+    </div>
+    <div class="summary-card low">
+      <div class="number">1</div>
+      <div class="label">부족 (1개)</div>
+    </div>
+    <div class="summary-card out">
+      <div class="number">0</div>
+      <div class="label">품절 (0개)</div>
+    </div>
+  </div>
+
+  <!-- 아기 용품 -->
+  <div class="category">
+    <div class="category-header">
+      <span class="icon">&#x1F476;</span> 아기 용품
+    </div>
+    <div class="item">
+      <span class="item-name">아기 세제</span>
+      <div class="item-qty">
+        <span class="qty-badge qty-low">1</span>
+        <span class="status-label status-low">구매 필요</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 조언 -->
+  <div class="tips">
+    <h3>재고 관리 조언</h3>
+    <ul>
+      <li>아기 세제가 1개 남았습니다. 아기 용품은 품절 전에 미리 구매하는 것이 좋습니다.</li>
+      <li>아기 세제는 보통 2~3주에 1통씩 소모됩니다. 여유분 1~2개를 항상 유지하세요.</li>
+      <li>쿠팡 로켓배송이나 정기배송을 설정하면 깜빡하지 않고 보충할 수 있습니다.</li>
+    </ul>
+  </div>
+
+  <div class="updated">마지막 업데이트: 2026년 4월 10일</div>
+
+</div>
+
+</body>
+</html>
