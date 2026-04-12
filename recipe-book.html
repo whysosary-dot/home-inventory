@@ -643,7 +643,7 @@ function renderList() {
 
 function openDetail(id) {
   currentRecipeId = id;
-  const r = recipes.find(x => x.id === id);
+  const r = recipes.find(x => String(x.id) === String(id));
   if (!r) return;
 
   document.getElementById('detailTitle').textContent = r.name;
@@ -678,12 +678,12 @@ function deleteRecipe() {
   if (!confirm('이 레시피를 삭제할까요?')) return;
   // HTML 레시피 삭제 시 삭제 목록에 추가
   const htmlIds = HTML_RECIPES.map(r => r.id);
-  if (htmlIds.includes(currentRecipeId)) {
+  if (htmlIds.map(String).includes(String(currentRecipeId))) {
     const deleted = JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
     deleted.push(currentRecipeId);
     localStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
   }
-  recipes = recipes.filter(r => r.id !== currentRecipeId);
+  recipes = recipes.filter(r => String(r.id) !== String(currentRecipeId));
   saveUserRecipes();
   closeDetail();
   renderFilters();
