@@ -666,12 +666,19 @@ function openDetail(id) {
     </div>
   `;
   document.getElementById('detailView').classList.add('show');
+  history.pushState({ detail: id }, '');
 }
 
 function closeDetail() {
   document.getElementById('detailView').classList.remove('show');
   currentRecipeId = null;
 }
+
+window.addEventListener('popstate', function(e) {
+  if (document.getElementById('detailView').classList.contains('show')) {
+    closeDetail();
+  }
+});
 
 function deleteRecipe() {
   if (!currentRecipeId) return;
