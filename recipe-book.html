@@ -538,14 +538,6 @@ let currentRecipeId = null;
 // ===== HTML 하드코딩 레시피 (Claude가 관리) =====
 const HTML_RECIPES = [
     {
-      id: 'r_test',
-      name: '테스트요리',
-      category: '기타',
-      emoji: '🍽️',
-      ingredients: [],
-      steps: []
-    },
-    {
       id: 'r_jeyuk',
       name: '제육볶음',
       category: '한식',
@@ -633,7 +625,7 @@ function renderList() {
   }
 
   list.innerHTML = filtered.map(r => `
-    <div class="recipe-card" onclick="openDetail(${r.id})">
+    <div class="recipe-card" onclick="openDetail('${r.id}')">
       <div class="recipe-emoji">${r.emoji || DEFAULT_EMOJIS[r.category] || '🍽️'}</div>
       <div class="recipe-info">
         <h3>${r.name}</h3>
