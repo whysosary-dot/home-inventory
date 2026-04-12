@@ -523,7 +523,6 @@
 
 <script>
 // ===== DATA =====
-const STORAGE_KEY = 'myRecipeBook';
 const CATEGORY_EMOJIS = {
   '한식': '🇰🇷', '중식': '🇨🇳', '일식': '🇯🇵', '양식': '🍝',
   '동남아': '🌴', '분식': '🍢', '디저트': '🍰', '기타': '🍽️'
@@ -533,13 +532,11 @@ const DEFAULT_EMOJIS = {
   '동남아': '🍜', '분식': '🍢', '디저트': '🍰', '기타': '🍽️'
 };
 
-let recipes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let activeFilter = '전체';
 let currentRecipeId = null;
 
-// ===== SAMPLE DATA (첫 방문 시) =====
-if (recipes.length === 0) {
-  recipes = [
+// ===== RECIPES =====
+let recipes = [
     {
       id: Date.now() + 1,
       name: '테스트요리',
@@ -556,14 +553,9 @@ if (recipes.length === 0) {
       ingredients: ['돼지고기 앞다리살 600g', '설탕 2스푼', '간장 2스푼', '고추장 2스푼', '고춧가루 2스푼', '맛술 3스푼', '물엿 2스푼', '굴소스 1스푼', '다진마늘 1스푼', '양파 1개', '대파 1대', '청양고추 2개', '통깨', '식용유'],
       steps: ['설탕 2스푼, 간장 2스푼을 넣고 고기에 밑간해서 30분 정도 재워둔다', '양념장(고추장 2스푼, 고춧가루 2스푼, 맛술 3스푼, 물엿 2스푼, 굴소스 1스푼, 다진마늘 1스푼)을 버무려서 고기 재우는 동안 숙성시킨다', '팬에 식용유를 두르고 고기를 익혀준다', '고기가 어느정도 익으면 양념장을 넣고 양념이 고기에 베이게 버무린다', '고기가 거의 익었다 싶으면 양파 1개 채썰고, 대파 1대 길게 썰어서 넣고 같이 볶는다', '양파가 투명해지면 청양고추 2개 어슷썰어 넣고 통깨로 마무리한다']
     }
-  ];
-  save();
-}
+];
 
 // ===== FUNCTIONS =====
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
-}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -673,7 +665,7 @@ function deleteRecipe() {
   if (!currentRecipeId) return;
   if (!confirm('이 레시피를 삭제할까요?')) return;
   recipes = recipes.filter(r => r.id !== currentRecipeId);
-  save();
+
   closeDetail();
   renderFilters();
   renderList();
@@ -719,7 +711,7 @@ function saveRecipe() {
     steps
   });
 
-  save();
+
   closeModal();
   renderFilters();
   renderList();
@@ -737,7 +729,7 @@ function addRecipeFromClaude(data) {
     ingredients: data.ingredients || [],
     steps: data.steps || []
   });
-  save();
+
   renderFilters();
   renderList();
   showToast(`"${data.name}" 추가 완료!`);
