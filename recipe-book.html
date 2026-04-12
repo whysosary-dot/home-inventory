@@ -541,6 +541,14 @@ let currentRecipeId = null;
 if (recipes.length === 0) {
   recipes = [
     {
+      id: Date.now() + 1,
+      name: '테스트요리',
+      category: '기타',
+      emoji: '🍽️',
+      ingredients: [],
+      steps: []
+    },
+    {
       id: Date.now(),
       name: '제육볶음',
       category: '한식',
