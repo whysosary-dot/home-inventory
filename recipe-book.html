@@ -535,10 +535,10 @@ const DEFAULT_EMOJIS = {
 let activeFilter = '전체';
 let currentRecipeId = null;
 
-// ===== RECIPES =====
-let recipes = [
+// ===== HTML 하드코딩 레시피 (Claude가 관리) =====
+const HTML_RECIPES = [
     {
-      id: Date.now(),
+      id: 'r_jeyuk',
       name: '제육볶음',
       category: '한식',
       emoji: '🥘',
@@ -546,6 +546,26 @@ let recipes = [
       steps: ['설탕 2스푼, 간장 2스푼을 넣고 고기에 밑간해서 30분 정도 재워둔다', '양념장(고추장 2스푼, 고춧가루 2스푼, 맛술 3스푼, 물엿 2스푼, 굴소스 1스푼, 다진마늘 1스푼)을 버무려서 고기 재우는 동안 숙성시킨다', '팬에 식용유를 두르고 고기를 익혀준다', '고기가 어느정도 익으면 양념장을 넣고 양념이 고기에 베이게 버무린다', '고기가 거의 익었다 싶으면 양파 1개 채썰고, 대파 1대 길게 썰어서 넣고 같이 볶는다', '양파가 투명해지면 청양고추 2개 어슷썰어 넣고 통깨로 마무리한다']
     }
 ];
+
+// ===== 병합: HTML 레시피 + 수기 입력 레시피 =====
+const USER_RECIPES_KEY = 'myRecipeBook_user';
+const DELETED_KEY = 'myRecipeBook_deleted';
+
+function loadRecipes() {
+  const userRecipes = JSON.parse(localStorage.getItem(USER_RECIPES_KEY) || '[]');
+  const deletedIds = JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
+  // HTML 레시피 중 삭제되지 않은 것 + 수기 입력 레시피
+  const html = HTML_RECIPES.filter(r => !deletedIds.includes(r.id));
+  return [...html, ...userRecipes];
+}
+
+function saveUserRecipes() {
+  const htmlIds = HTML_RECIPES.map(r => r.id);
+  const userOnly = recipes.filter(r => !htmlIds.includes(r.id));
+  localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(userOnly));
+}
+
+let recipes = loadRecipes();
 
 // ===== FUNCTIONS =====
 
@@ -656,8 +676,15 @@ function closeDetail() {
 function deleteRecipe() {
   if (!currentRecipeId) return;
   if (!confirm('이 레시피를 삭제할까요?')) return;
+  // HTML 레시피 삭제 시 삭제 목록에 추가
+  const htmlIds = HTML_RECIPES.map(r => r.id);
+  if (htmlIds.includes(currentRecipeId)) {
+    const deleted = JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
+    deleted.push(currentRecipeId);
+    localStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
+  }
   recipes = recipes.filter(r => r.id !== currentRecipeId);
-
+  saveUserRecipes();
   closeDetail();
   renderFilters();
   renderList();
@@ -702,8 +729,7 @@ function saveRecipe() {
     ingredients,
     steps
   });
-
-
+  saveUserRecipes();
   closeModal();
   renderFilters();
   renderList();
